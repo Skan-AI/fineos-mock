@@ -21,7 +21,7 @@ const cases = [
     requestCategory: "Accident or treatment required for an injury",
     eventType: "Accident",
     conditionDescription: "Right rotator cuff tear after a warehouse fall",
-    procedure: "Arthroscopic right rotator cuff repair", conditionCategory: "Shoulder injury",
+    procedure: "Arthroscopic right rotator cuff repair", conditionCategory: "Other Condition",
     diagnosis: {
       expected: { code: "S46.011A", description: "Strain of muscle and tendon of the rotator cuff, right shoulder, initial encounter" },
       decoys: [
@@ -53,7 +53,7 @@ const cases = [
     requestCategory: "Sickness, treatment required for a medical condition or any other medical procedure",
     eventType: "Sickness",
     conditionDescription: "Acute appendicitis requiring emergency surgery",
-    procedure: "Laparoscopic appendectomy", conditionCategory: "Digestive",
+    procedure: "Laparoscopic appendectomy", conditionCategory: "Appendectomy",
     diagnosis: {
       expected: { code: "K35.80", description: "Unspecified acute appendicitis without perforation or gangrene" },
       decoys: [
@@ -116,7 +116,7 @@ const cases = [
     requestCategory: "Sickness, treatment required for a medical condition or any other medical procedure",
     eventType: "Sickness",
     conditionDescription: "Lumbar disc herniation causing persistent lower-back pain",
-    procedure: "Lumbar microdiscectomy", conditionCategory: "Back",
+    procedure: "Lumbar microdiscectomy", conditionCategory: "Other Condition",
     diagnosis: {
       expected: { code: "M51.26", description: "Other intervertebral disc displacement, lumbar region" },
       decoys: [
@@ -149,7 +149,7 @@ const cases = [
     eventType: "Accident",
     conditionDescription: "Closed fracture of the left distal radius after a bicycle accident",
     procedure: "Open reduction and internal fixation of left distal radius",
-    conditionCategory: "Wrist fracture",
+    conditionCategory: "Broken Bone",
     diagnosis: {
       expected: { code: "S52.502A", description: "Unspecified fracture of the lower end of left radius, initial encounter for closed fracture" },
       decoys: [
@@ -214,7 +214,7 @@ const cases = [
     requestCategory: "Sickness, treatment required for a medical condition or any other medical procedure",
     eventType: "Sickness",
     conditionDescription: "Severe right carpal tunnel syndrome affecting hand function",
-    procedure: "Right carpal tunnel release", conditionCategory: "Neuropathy",
+    procedure: "Right carpal tunnel release", conditionCategory: "Other Condition",
     diagnosis: {
       expected: { code: "G56.01", description: "Carpal tunnel syndrome, right upper limb" },
       decoys: [
@@ -246,7 +246,7 @@ const cases = [
     requestCategory: "Sickness, treatment required for a medical condition or any other medical procedure",
     eventType: "Sickness",
     conditionDescription: "Symptomatic gallstones without cholecystitis",
-    procedure: "Laparoscopic cholecystectomy", conditionCategory: "Digestive",
+    procedure: "Laparoscopic cholecystectomy", conditionCategory: "Gallbladder surgery",
     diagnosis: {
       expected: { code: "K80.20", description: "Calculus of gallbladder without cholecystitis without obstruction" },
       decoys: [
