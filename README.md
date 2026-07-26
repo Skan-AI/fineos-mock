@@ -85,7 +85,7 @@ Installs all three workspaces (`apps/web`, `apps/api`, `packages/contracts`) fro
 npm run db:reset
 ```
 
-Recreates `data/fineos.sqlite` from `apps/api/src/infrastructure/schema.sql` and reseeds it (Erica Alexander / David Hunter / Travis Larson fixtures — see [Fixtures](#fixtures)). Safe to run any time; it is destructive only to the dev database file, not to `data/fineos.e2e.sqlite` or `data/fineos.visual.sqlite` used by the test suites.
+Recreates `data/fineos.sqlite` from `apps/api/src/infrastructure/schema.sql` and reseeds all Process 1 and Process 2 claimant/provider fixtures (see [Fixtures](#fixtures)). Safe to run any time; it is destructive only to the dev database file, not to `data/fineos.e2e.sqlite` or `data/fineos.visual.sqlite` used by the test suites.
 
 The API also resets and reseeds its configured database file automatically on every process start (`apps/api/src/server.ts`), so a manual reset is only needed to restore fixtures mid-session without restarting the server.
 
@@ -186,13 +186,23 @@ Every endpoint validates at the boundary and returns a typed `{ ok: true, value 
 
 Seeded by `apps/api/src/infrastructure/seed.ts` (also used by `db:reset`):
 
-- `NTN-159898` — David Hunter; successful Absence + GDC reference case, diagnosis `O80`, provider Travis Larson.
+- `NTN-159898` — David Hunter; successful Absence + GDC reference case with `M25.561` diagnosis evidence and Travis Larson provider evidence.
 - `NTN-170001` — Marcus Bailey; successful Absence-only case.
 - `NTN-170002` — Carla Nguyen; successful GDC-only case with no provider details.
 - `NTN-170003` — Derek Osei; `accommodation_only`, expected ineligible-intake escalation.
 - `NTN-170004` — Elena Ruiz; serious-health case with a missing condition description, expected conditions-not-met escalation.
+- `NTN-170005` — Alicia Morgan; right rotator cuff injury and arthroscopic repair.
+- `NTN-170006` — Brandon Lee; acute appendicitis and laparoscopic appendectomy.
+- `NTN-170007` — Camila Torres; term pregnancy and planned cesarean delivery.
+- `NTN-170008` — Daniel Brooks; lumbar disc herniation and microdiscectomy.
+- `NTN-170009` — Erin Wallace; left distal radius fracture and internal fixation.
+- `NTN-170010` — Fatima Hassan; left breast cancer and lumpectomy.
+- `NTN-170011` — Gavin Price; right carpal tunnel syndrome and release.
+- `NTN-170012` — Hannah Kim; symptomatic gallstones and cholecystectomy.
+- `NTN-170013` — Isabella Rossi; third-trimester preeclampsia and induced delivery.
+- `NTN-170014` — Jonah Reed; right inguinal hernia and laparoscopic repair.
 
-Each Process 2 root has a complete SQLite-backed dossier containing profile/contact/employment data, documents and eForm answers, Case Map participants, applicable Absence/GDC details, tasks/alerts, diagnosis evidence, and expected decision/terminal metadata. Erica Alexander remains a shared non-case party for Process 1 intake, and Travis Larson remains the reusable medical provider. `NTN-000000` is intentionally absent for the case-not-found branch.
+Each Process 2 root has a complete SQLite-backed dossier containing profile/contact/employment data, documents and eForm answers, Case Map participants, applicable Absence/GDC details, tasks/alerts, diagnosis evidence, and expected decision/terminal metadata. Erica Alexander remains the shared non-case party for Process 1 intake; Process 2 includes both reusable and case-specific provider fixtures. `NTN-000000` is intentionally absent for the case-not-found branch.
 
 ## End-to-end walkthrough
 

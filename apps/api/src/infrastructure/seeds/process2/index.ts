@@ -3,6 +3,7 @@ import { ntn170001Seed } from "./ntn-170001.ts";
 import { ntn170002Seed } from "./ntn-170002.ts";
 import { ntn170003Seed } from "./ntn-170003.ts";
 import { ntn170004Seed } from "./ntn-170004.ts";
+import { NTN_170005_TO_170014_SEEDS } from "./ntn-170005-170014.ts";
 import type { Process2CaseSeed } from "./types";
 
 // The single ordered source of the Process 2 case fixtures. seed.ts reads this
@@ -14,4 +15,5 @@ export const PROCESS2_CASE_SEEDS: readonly Process2CaseSeed[] = [
   ntn170002Seed,
   ntn170003Seed,
   ntn170004Seed,
+  ...NTN_170005_TO_170014_SEEDS,
 ];
