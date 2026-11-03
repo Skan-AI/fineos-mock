@@ -272,7 +272,7 @@ const documents = (config: FullPathCaseConfig): readonly CaseDocument[] => [
 ];
 
 const eFormRows = (config: FullPathCaseConfig): CaseEForm["rows"] => [
-  { question: "Unum Type of Request", answer: config.requestCategory },
+  { question: "Type of Request", answer: config.requestCategory },
   { question: "Event Date", answer: displayDate(config.leaveStart) }, { question: "Event Type", answer: config.eventType },
   { question: "Expected RTW Date", answer: displayDate(config.leaveEnd) }, { question: "Absence Type", answer: "Continuous" },
   { question: "Leave Reason", answer: config.leaveReasonLabel }, { question: "Reason for leave", answer: config.conditionDescription },

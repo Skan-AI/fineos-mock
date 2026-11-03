@@ -551,7 +551,7 @@ export const ntn159898Seed = {
       evidence: [
         {
           id: "ev-uknow",
-          source: "UNUM Inside — uKnow",
+          source: "uKnow",
           excerpt: "The preferred resources to locate the appropriate ICD 10 code(s) are listed below.",
           supportedCodes: [],
           route: "/lookups/uknow",

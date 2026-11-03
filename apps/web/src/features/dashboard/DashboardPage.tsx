@@ -4,13 +4,13 @@ import { EmptyState } from "../../components/fineos/DataTable";
 
 const TEAM_CASES = [
   { name: "Unassigned", count: 42706, bar: true },
-  { name: "Josh Maxwell", count: 78 },
-  { name: "Paul Cheng", count: 12 },
-  { name: "Austin Lazowski", count: 4 },
+  { name: "Sam Rivera", count: 78 },
+  { name: "Alex Morgan", count: 12 },
+  { name: "Jordan Blake", count: 4 },
   { name: "EST1", count: 4 },
-  { name: "Kamala Vutukuri", count: 4 },
-  { name: "Deborah Buco", count: 2 },
-  { name: "Latasha Lyons", count: 2 },
+  { name: "Priya Nair", count: 4 },
+  { name: "Dana Reyes", count: 2 },
+  { name: "Taylor Brooks", count: 2 },
 ] as const;
 
 const WIDGETS = ["My Cases Listview", "Team Cases By User", "Tasks by Type"] as const;

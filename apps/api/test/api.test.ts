@@ -100,6 +100,46 @@ describe("Session boundary", () => {
     expect(res.statusCode).toBe(400);
     expect(res.json()).toMatchObject({ ok: false, error: "invalid_request" });
   });
+
+  it("should reject protected API requests when authentication is required and no session cookie is provided", async () => {
+    await app.close();
+    app = buildApp(db, { requireAuth: true });
+    const res = await get("/api/cases/NTN-159898");
+    expect(res.statusCode).toBe(401);
+    expect(res.json()).toMatchObject({ ok: false, error: "unauthorized" });
+  });
+
+  it("should allow protected API requests when a signed session cookie is provided", async () => {
+    await app.close();
+    app = buildApp(db, { requireAuth: true });
+    const loginRes = await post("/api/session", { username: "agent", password: VALID_PASSWORD });
+    const cookie = String(loginRes.headers["set-cookie"]);
+    const caseRes = await app.inject({ method: "GET", url: "/api/cases/NTN-159898", headers: { cookie } });
+    expect(cookie).toContain("fineos_session=");
+    expect(cookie).toContain("HttpOnly");
+    expect(caseRes.statusCode).toBe(200);
+    expect(caseRes.json()).toMatchObject({ ok: true });
+  });
+
+  it("should enforce a custom password from FINEOS_PASSWORD when configured", async () => {
+    process.env.FINEOS_PASSWORD = "s3cr3t-custom-password";
+    try {
+      const defaultRes = await post("/api/session", { username: "agent", password: VALID_PASSWORD });
+      const customRes = await post("/api/session", { username: "agent", password: "s3cr3t-custom-password" });
+      expect(defaultRes.statusCode).toBe(401);
+      expect(customRes.statusCode).toBe(200);
+    } finally {
+      delete process.env.FINEOS_PASSWORD;
+    }
+  });
+
+  it("should redirect unauthenticated client page requests to login when authentication is required", async () => {
+    await app.close();
+    app = buildApp(db, { requireAuth: true });
+    const res = await get("/cases/NTN-159898/general");
+    expect(res.statusCode).toBe(302);
+    expect(res.headers.location).toBe("/login");
+  });
 });
 
 describe("Test reset boundary", () => {

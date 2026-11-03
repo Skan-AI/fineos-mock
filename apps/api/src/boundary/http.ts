@@ -6,6 +6,7 @@ import { apiErr } from "../application/api-result";
 const STATUS_BY_ERROR: Record<ApiErrorCode, number> = {
   invalid_request: 400,
   invalid_credentials: 401,
+  unauthorized: 401,
   party_not_found: 404,
   unknown_section: 404,
   case_not_found: 404,

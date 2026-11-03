@@ -1,6 +1,7 @@
 export type ApiErrorCode =
   | "invalid_request"
   | "invalid_credentials"
+  | "unauthorized"
   | "party_not_found"
   | "unknown_section"
   | "invalid_section"

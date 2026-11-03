@@ -53,8 +53,15 @@ export interface ProviderInput {
 
 type Result<T> = ApiResult<T, ApiErrorCode>;
 
-const readJson = <T>(response: Response): Promise<Result<T>> =>
-  response.json() as Promise<Result<T>>;
+const redirectIfUnauthorized = (response: Response): void => {
+  if (response.status !== 401 || typeof window === "undefined") return;
+  if (window.location.pathname !== "/login") window.location.assign("/login");
+};
+
+const readJson = <T>(response: Response): Promise<Result<T>> => {
+  redirectIfUnauthorized(response);
+  return response.json() as Promise<Result<T>>;
+};
 
 const get = async <T>(path: string): Promise<Result<T>> =>
   readJson<T>(await fetch(`/api${path}`));
@@ -72,6 +79,9 @@ const query = (value: string): string => encodeURIComponent(value);
 
 export const login = (username: string, password: string): Promise<Result<SessionView>> =>
   send("/session", "POST", { username, password });
+
+export const getSession = (): Promise<Result<SessionView>> =>
+  get("/session");
 
 export const searchParties = (term: string): Promise<Result<readonly PartyView[]>> =>
   get(`/parties/search?term=${query(term)}`);

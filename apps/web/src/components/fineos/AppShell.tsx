@@ -79,7 +79,7 @@ function HeaderTools() {
       <ToolToggle label="Open in new window" icon="external" />
       <ToolToggle label="Theme" icon="theme" />
       <LanguageSelect />
-      <span className="fx-avatar" aria-hidden="true">JE</span>
+      <span className="fx-avatar" aria-hidden="true">ES</span>
     </div>
   );
 }
@@ -143,5 +143,5 @@ function NavIcon({ item, active, onSelect }: NavIconProps) {
 }
 
 function ShellFooter() {
-  return <footer className="fx-footer"><span>Version: 25.4.4-UNUM-C2.0.7</span><span>About</span><span>Powered by FINEOS</span></footer>;
+  return <footer className="fx-footer"><span>Version: 25.4.4</span><span>About</span><span>Powered by FINEOS</span></footer>;
 }

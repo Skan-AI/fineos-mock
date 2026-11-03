@@ -19,7 +19,7 @@ function LoginFields({ error }: { readonly error: string | null }) {
   return (
     <div className="fx-login-body">
       <p className="fx-login-title">Sign in with your email and password</p>
-      <TextField label="Email" name="email" type="email" defaultValue="jekwueme@unum.com" />
+      <TextField label="Email" name="email" type="email" defaultValue="es.specialist@example.com" />
       <TextField label="Password" name="password" type="password" placeholder="Password" />
       {error && <p role="alert" className="fx-error">{error}</p>}
       <button type="submit" className="fx-primary fx-signin">Sign in</button>

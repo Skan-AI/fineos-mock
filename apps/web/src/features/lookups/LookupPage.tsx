@@ -4,7 +4,7 @@ import type { CaseLookup, DossierPanel, DossierTable, LookupContent, LookupLink 
 import { getCase } from "../../app/api";
 
 const LOOKUP_TITLES: Record<string, string> = {
-  uknow: "UNUM Inside — uKnow",
+  uknow: "uKnow",
   google: "Google Search",
   icd10data: "ICD10Data.com",
   "icd-reference": "ICD Codes: Reference Sheet",

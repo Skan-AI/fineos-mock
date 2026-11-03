@@ -81,7 +81,7 @@ describe("FINEOS sign-in", () => {
     const user = userEvent.setup();
     renderAt("/login");
     await user.clear(screen.getByLabelText(/email/i));
-    await user.type(screen.getByLabelText(/email/i), "je@unum.com");
+    await user.type(screen.getByLabelText(/email/i), "es@example.com");
     await user.type(screen.getByLabelText(/password/i), "nope");
     await user.click(screen.getByRole("button", { name: /sign in/i }));
     expect((await screen.findByRole("alert")).textContent).toMatch(/not recognized/i);
@@ -91,7 +91,7 @@ describe("FINEOS sign-in", () => {
     const user = userEvent.setup();
     renderAt("/login");
     await user.clear(screen.getByLabelText(/email/i));
-    await user.type(screen.getByLabelText(/email/i), "je@unum.com");
+    await user.type(screen.getByLabelText(/email/i), "es@example.com");
     await user.type(screen.getByLabelText(/password/i), "fineos");
     await user.click(screen.getByRole("button", { name: /sign in/i }));
     expect(await screen.findByRole("heading", { name: /dashboard/i })).toBeTruthy();

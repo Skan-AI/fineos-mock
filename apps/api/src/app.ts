@@ -11,7 +11,7 @@ import { createPartyService } from "./application/party-service";
 import { createNotificationService } from "./application/notification-service";
 import { createExecutionService } from "./application/execution-service";
 import { createTargetStateService } from "./application/target-state-service";
-import { registerSessionRoutes } from "./boundary/session-routes";
+import { enforceSessionHook, registerSessionRoutes } from "./boundary/session-routes";
 import { registerPartyRoutes } from "./boundary/party-routes";
 import { registerNotificationRoutes } from "./boundary/notification-routes";
 import { registerCaseRoutes } from "./boundary/case-routes";
@@ -21,6 +21,7 @@ import { registerTestRoutes } from "./boundary/test-routes";
 interface AppOptions {
   readonly resetTestData?: () => void;
   readonly webRoot?: string;
+  readonly requireAuth?: boolean;
   // Code-level override for API unit tests only; production passes nothing and
   // inherits the shared source constant. There is no runtime external override.
   readonly automationShortcutsEnabled?: boolean;
@@ -33,6 +34,7 @@ export const buildApp = (db: Db, options: AppOptions = {}): FastifyInstance => {
   const parties = createPartyRepository(db);
   const notifications = createNotificationRepository(db);
   const cases = createCaseRepository(db);
+  if (options.requireAuth) app.addHook("onRequest", enforceSessionHook);
   registerSessionRoutes(app);
   registerPartyRoutes(app, createPartyService(parties));
   registerNotificationRoutes(app, createNotificationService({ parties, notifications }));

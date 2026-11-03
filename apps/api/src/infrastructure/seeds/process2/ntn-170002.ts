@@ -255,7 +255,7 @@ const diagnosisEvidence = (): readonly LookupEvidence[] => [
 ];
 
 const uKnowContent = (): LookupContent => ({
-  title: "UNUM Inside / uKnow (KMS Lighthouse)",
+  title: "uKnow (KMS Lighthouse)",
   paragraphs: ["Non-FINEOS exception. The internal knowledge base points to the ICD-10 resources used below."],
   panels: [
     {

@@ -53,8 +53,8 @@ const NAVIGATION = [
 ] as const;
 
 const TEAM_ROWS = [
-  "Unassigned 42706", "Josh Maxwell 78", "Paul Cheng 12", "Austin Lazowski 4",
-  "EST1 4", "Kamala Vutukuri 4", "Deborah Buco 2", "Latasha Lyons 2",
+  "Unassigned 42706", "Sam Rivera 78", "Alex Morgan 12", "Jordan Blake 4",
+  "EST1 4", "Priya Nair 4", "Dana Reyes 2", "Taylor Brooks 2",
 ] as const;
 
 const DASHBOARD = [

@@ -107,8 +107,10 @@ Open `http://localhost:5173`.
 
 The sign-in form is pre-filled with the fixture email; only the password needs to be typed:
 
-- **Email:** `jekwueme@unum.com` (any non-empty value is accepted — only the password is checked)
-- **Password:** `fineos`
+- **Email:** `es.specialist@example.com` (any non-empty value is accepted — only the password is checked)
+- **Password:** the value of `FINEOS_PASSWORD`. Local development falls back to `fineos`; production refuses to start without `FINEOS_PASSWORD`.
+
+Every `/api` route except `POST /api/session` needs the signed `fineos_session` cookie that sign-in sets, and app pages redirect to `/login` without it. Set `FINEOS_SESSION_SECRET` to keep sessions valid across restarts.
 
 ## Build
 
@@ -209,7 +211,7 @@ Each Process 2 root has a complete SQLite-backed dossier containing profile/cont
 Manual path exercising the full generated-case journey (mirrors `tests/e2e/full-lifecycle.spec.ts`):
 
 1. Start the API and web dev servers (see [Running the app locally](#running-the-app-locally)) and open `http://localhost:5173`.
-2. Sign in with `jekwueme@unum.com` / `fineos`.
+2. Sign in with `es.specialist@example.com` and the `FINEOS_PASSWORD` value (`fineos` locally).
 3. From the dashboard, open search, switch to the **Party** tab, and find **Erica Alexander**.
 4. From Erica's profile, start a new notification. Step through the intake wizard: Notification Details → Occupation Details → Type of Request → Reason for Absence → Leave Periods → Work Schedule → Additional Absence Details → Disability Incident Details → Policy Details → Earnings Details → Medical Details (select **Leave and GDC** in Notification Options to activate both component tracks).
 5. Submit. The confirmation page shows the generated root notification ID plus its `-ABS-01` and `-GDC-02` case links.
