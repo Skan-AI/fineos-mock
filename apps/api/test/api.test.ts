@@ -6,6 +6,8 @@ import { resetDatabase, resetSeededDatabase } from "../src/infrastructure/databa
 import { seedDatabase } from "../src/infrastructure/seed";
 import { createCaseRepository } from "../src/infrastructure/repositories";
 import { buildApp } from "../src/app";
+import { MAX_FAILED_LOGINS } from "../src/application/login-throttle";
+import { A_CLIENT, ANOTHER_CLIENT } from "./builders";
 
 type Db = Database.Database;
 
@@ -35,6 +37,15 @@ const put = (url: string, payload: unknown) =>
 const patch = (url: string, payload: unknown) =>
   app.inject({ method: "PATCH", url, payload });
 const get = (url: string) => app.inject({ method: "GET", url });
+
+const forwardedFrom = (forgedAddress: string) => ({ "x-forwarded-for": `${forgedAddress}, ${A_CLIENT}` });
+const signIn = (password: string, headers: Record<string, string>) =>
+  app.inject({ method: "POST", url: "/api/session", payload: { username: "agent", password }, headers });
+const failSignInWithForgedAddresses = async (times: number): Promise<void> => {
+  for (let attempt = 0; attempt < times; attempt += 1) {
+    await signIn("wrong-password", forwardedFrom(`10.0.0.${attempt}`));
+  }
+};
 
 const aDraftRequest = () => ({
   source: "Phone",
@@ -139,6 +150,34 @@ describe("Session boundary", () => {
     const res = await get("/cases/NTN-159898/general");
     expect(res.statusCode).toBe(302);
     expect(res.headers.location).toBe("/login");
+  });
+
+  it("should refuse sign in when a client keeps failing, even if it forges X-Forwarded-For", async () => {
+    await failSignInWithForgedAddresses(MAX_FAILED_LOGINS);
+    const res = await signIn(VALID_PASSWORD, forwardedFrom("10.9.9.9"));
+    expect(res.statusCode).toBe(429);
+    expect(res.json()).toMatchObject({ ok: false, error: "too_many_attempts" });
+  });
+
+  it("should allow sign in from another client when one client is refused", async () => {
+    await failSignInWithForgedAddresses(MAX_FAILED_LOGINS);
+    const res = await signIn(VALID_PASSWORD, { "x-forwarded-for": ANOTHER_CLIENT });
+    expect(res.statusCode).toBe(200);
+  });
+
+  it("should send security headers on API responses", async () => {
+    const res = await get("/api/cases/NTN-159898");
+    expect(res.headers["x-frame-options"]).toBe("SAMEORIGIN");
+    expect(res.headers["x-content-type-options"]).toBe("nosniff");
+    expect(res.headers["content-security-policy"]).toContain("default-src 'self'");
+  });
+
+  it("should send security headers on requests refused for a missing session", async () => {
+    await app.close();
+    app = buildApp(db, { requireAuth: true });
+    const res = await get("/api/cases/NTN-159898");
+    expect(res.statusCode).toBe(401);
+    expect(res.headers["x-frame-options"]).toBe("SAMEORIGIN");
   });
 });
 

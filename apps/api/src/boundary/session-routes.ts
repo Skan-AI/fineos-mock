@@ -1,6 +1,7 @@
 import process from "node:process";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
+import type { LoginThrottle } from "../application/login-throttle";
 import { authenticate, verifySessionToken } from "../application/session-service";
 import { parse, send } from "./http";
 
@@ -33,11 +34,17 @@ const readBearerToken = (authHeader: string | undefined): string | undefined =>
 export const readRequestSession = (req: FastifyRequest) =>
   verifySessionToken(readCookieToken(req.headers.cookie) ?? readBearerToken(req.headers.authorization));
 
-export const registerSessionRoutes = (app: FastifyInstance): void => {
+const recordAttempt = (throttle: LoginThrottle, clientId: string, succeeded: boolean): void =>
+  succeeded ? throttle.recordSuccess(clientId) : throttle.recordFailure(clientId);
+
+export const registerSessionRoutes = (app: FastifyInstance, throttle: LoginThrottle): void => {
   app.post("/api/session", (req, reply) => {
     const body = parse(credentialsSchema, req.body);
     if (!body.ok) return send(reply, body);
+    const allowed = throttle.check(req.ip);
+    if (!allowed.ok) return send(reply, allowed);
     const result = authenticate(body.value);
+    recordAttempt(throttle, req.ip, result.ok);
     if (result.ok) void reply.header("Set-Cookie", buildSessionCookie(result.value.token));
     return send(reply, result);
   });

@@ -112,6 +112,8 @@ The sign-in form is pre-filled with the fixture email; only the password needs t
 
 Every `/api` route except `POST /api/session` needs the signed `fineos_session` cookie that sign-in sets, and app pages redirect to `/login` without it. Set `FINEOS_SESSION_SECRET` to keep sessions valid across restarts.
 
+After 10 failed sign-ins in 15 minutes, a client gets `429 too_many_attempts` until the 15 minutes end. A successful sign-in clears its count. Every response carries the standard security headers from `@fastify/helmet`.
+
 ## Build
 
 ```bash

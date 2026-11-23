@@ -10,6 +10,7 @@ import {
   type Notification,
   type NotificationDraftInput,
 } from "@fineos/contracts";
+import { createLoginThrottle, type LoginThrottle } from "../src/application/login-throttle";
 
 const draft = (
   overrides: Partial<NotificationDraftInput> = {},
@@ -81,3 +82,22 @@ export const anExecutionInput = (
   providerAttached: true,
   ...overrides,
 });
+
+export const A_CLIENT = "203.0.113.9";
+export const ANOTHER_CLIENT = "198.51.100.7";
+
+export interface FakeClock {
+  readonly now: () => number;
+  readonly advanceBy: (ms: number) => void;
+}
+
+export const aClock = (): FakeClock => {
+  let at = 0;
+  return { now: () => at, advanceBy: (ms) => void (at += ms) };
+};
+
+export const aThrottleWithFailures = (failures: number, clock: FakeClock = aClock()): LoginThrottle => {
+  const throttle = createLoginThrottle(clock.now);
+  Array.from({ length: failures }).forEach(() => throttle.recordFailure(A_CLIENT));
+  return throttle;
+};

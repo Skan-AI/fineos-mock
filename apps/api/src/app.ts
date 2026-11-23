@@ -1,4 +1,5 @@
 import Fastify, { type FastifyInstance } from "fastify";
+import fastifyHelmet from "@fastify/helmet";
 import fastifyStatic from "@fastify/static";
 import { AUTOMATION_SHORTCUTS_ENABLED } from "@fineos/contracts";
 import type { Db } from "./infrastructure/database";
@@ -11,6 +12,7 @@ import { createPartyService } from "./application/party-service";
 import { createNotificationService } from "./application/notification-service";
 import { createExecutionService } from "./application/execution-service";
 import { createTargetStateService } from "./application/target-state-service";
+import { createLoginThrottle } from "./application/login-throttle";
 import { enforceSessionHook, registerSessionRoutes } from "./boundary/session-routes";
 import { registerPartyRoutes } from "./boundary/party-routes";
 import { registerNotificationRoutes } from "./boundary/notification-routes";
@@ -28,14 +30,20 @@ interface AppOptions {
 }
 
 const API_PREFIX = "/api";
+// Every request reaches the container through Cloud Run's front end, which appends the
+// caller's address to X-Forwarded-For. Trusting only that hop keeps the address the login
+// throttle counts out of the caller's control.
+const TRUSTED_PROXY_HOPS = 1;
+const trustFrontEndHop = (_address: string, hop: number): boolean => hop < TRUSTED_PROXY_HOPS;
 
 export const buildApp = (db: Db, options: AppOptions = {}): FastifyInstance => {
-  const app = Fastify();
+  const app = Fastify({ trustProxy: trustFrontEndHop });
   const parties = createPartyRepository(db);
   const notifications = createNotificationRepository(db);
   const cases = createCaseRepository(db);
-  if (options.requireAuth) app.addHook("onRequest", enforceSessionHook);
-  registerSessionRoutes(app);
+  app.register(fastifyHelmet);
+  if (options.requireAuth) app.after(() => void app.addHook("onRequest", enforceSessionHook));
+  registerSessionRoutes(app, createLoginThrottle());
   registerPartyRoutes(app, createPartyService(parties));
   registerNotificationRoutes(app, createNotificationService({ parties, notifications }));
   registerCaseRoutes(
